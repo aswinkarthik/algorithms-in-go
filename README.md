@@ -1,6 +1,6 @@
 # Algorithms in Go
 
-This repository is to various famous alogrithms in Go.
+This repository is to implement various alogrithms in Go.
 
 ## Algorithms
 
