@@ -1,7 +1,6 @@
 package main
 
 import "testing"
-// import "fmt"
 
 func TestWikiKruskal(t *testing.T) {
   wikiGraph := []Edge{
@@ -61,6 +60,16 @@ func TestIsACycleFormed(t *testing.T) {
 
   if formed {
     t.Error("Test failed to handle empty graph")
+  }
+
+  existingGraph = []Edge{
+    Edge{1,5,1},Edge{3,4,2},Edge{1,2,3},
+  }
+  additionalEdge3 := Edge{2,3,5}
+  formed = IsACycleFormed(existingGraph, additionalEdge3)
+
+  if formed {
+    t.Error("Test deteced a cycle when it dint exist (wiki)")
   }
 }
 
