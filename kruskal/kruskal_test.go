@@ -1,28 +1,39 @@
 package main
 
 import "testing"
+// import "fmt"
 
-func TestSum(t *testing.T) {
-  minimumSpan := Kruskal([]Edge{
+func TestWikiKruskal(t *testing.T) {
+  wikiGraph := []Edge{
     Edge{1,2,3},
-    Edge{1,3,2},
-    Edge{1,4,4},
-    Edge{2,4,5},
-  })
+    Edge{2,3,5},
+    Edge{1,5,1},
+    Edge{2,5,4},
+    Edge{3,5,6},
+    Edge{3,4,2},
+    Edge{4,5,7},
+  }
+  actualMinimumSpan := Kruskal(wikiGraph)
 
-  if validEdgeCount(minimumSpan) != 3 {
-    t.Error("Test failed")
+  expectedMinimumSpan := []Edge{
+    Edge{1,5,1},
+    Edge{3,4,2},
+    Edge{1,2,3},
+    Edge{2,3,5},
+  }
+
+  if !areSpansEqual(actualMinimumSpan, expectedMinimumSpan) {
+    t.Error("Actual and expected did not match")
   }
 }
 
-func validEdgeCount(edges []Edge) int {
-  count := 0
-  for _, edge := range edges {
-    if edge.Weight != 0 {
-      count += 1
+func areSpansEqual(actual, expected []Edge) bool {
+  for i, edge := range expected {
+    if(edge != actual[i]) {
+      return false
     }
   }
-  return count
+  return true
 }
 
 func TestIsACycleFormed(t *testing.T) {
