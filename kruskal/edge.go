@@ -1,4 +1,4 @@
-package main
+package kruskal
 
 //Structure of an Edge and is sortable by weight
 type Edge struct {
