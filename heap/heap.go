@@ -2,51 +2,56 @@ package heap
 
 import (
 	"fmt"
-	"math"
 )
 
 // Interface through which heap can be accessed
 type Interface interface {
 	// Insert an element into heap
-	Insert(element int64)
+	Insert(element interface{})
 	// Max/Min element at the top of heap. This is just a lookup.
 	// It will not have any side effect
-	Top() (int64, error)
+	Top() (interface{}, error)
 	// Removes the element from the top of the heap. Depending on the type of heap,
 	// either the max or min most element will come to the top.
-	Remove() (int64, error)
+	Remove() (interface{}, error)
 }
 
-func min(a, b int64) bool { return a < b }
-func max(a, b int64) bool { return a > b }
+// AssertHeapProperty is a function that has to qualify if heap property is met.
+// If true, heap property is considered to be with-held
+// If false, its not
+// This is used to handle inserts and removals appropriately.
+// Make sure to convert interface{} to appropriate type.
+type AssertHeapProperty func(a, b interface{}) bool
 
 type implementation struct {
-	comparator func(int64, int64) bool
-	elements   []int64
-	sentinel   int64
+	comparator AssertHeapProperty
+	elements   []interface{}
 }
 
-// NewMinHeap can be used to create a min heap
-// A MinHeap always has the minimum element at top
-func NewMinHeap() Interface {
+// New can be used to instantiate a generic Heap.
+// The comparator should assert that the heap property is met.
+func New(comparator AssertHeapProperty) Interface {
 	return &implementation{
-		comparator: min,
-		elements:   make([]int64, 0),
-		sentinel:   math.MaxInt64,
+		comparator: comparator,
+		elements:   make([]interface{}, 0),
 	}
 }
 
-// NewMaxHeap can be used to create a max heap
-// A MaxHeap will always have the maximum element at top
-func NewMaxHeap() Interface {
-	return &implementation{
-		comparator: max,
-		elements:   make([]int64, 0),
-		sentinel:   math.MinInt64,
-	}
+// NewMinHeapInt64 can be used to create a min heap of int64 elements
+// The interface does not support type. Hence Top and remove should cast appropriately.
+// It uses MinHeapInt64 as the comparator
+func NewMinHeapInt64() Interface {
+	return New(MinHeapInt64)
 }
 
-func (h *implementation) Insert(element int64) {
+// NewMaxHeapInt64 can be used to create a max heap of int64 elements
+// The interface does not support type. Hence Top and remove should cast appropriately.
+// It uses MaxHeapInt64 as the comparator
+func NewMaxHeapInt64() Interface {
+	return New(MaxHeapInt64)
+}
+
+func (h *implementation) Insert(element interface{}) {
 	h.elements = append(h.elements, element)
 
 	for index := len(h.elements) - 1; index > 0; index = parentOf(index) {
@@ -63,14 +68,14 @@ func (h *implementation) Insert(element int64) {
 	}
 }
 
-func (h *implementation) Top() (int64, error) {
+func (h *implementation) Top() (interface{}, error) {
 	if len(h.elements) < 1 {
 		return 0, fmt.Errorf("heap is empty")
 	}
 	return h.elements[0], nil
 }
 
-func (h *implementation) Remove() (minimum int64, err error) {
+func (h *implementation) Remove() (minimum interface{}, err error) {
 	if len(h.elements) < 1 {
 		return 0, fmt.Errorf("heap is empty")
 	}
@@ -78,7 +83,7 @@ func (h *implementation) Remove() (minimum int64, err error) {
 	// save for later returning
 	minimum = h.elements[0]
 	if len(h.elements) == 1 {
-		h.elements = make([]int64, 0)
+		h.elements = make([]interface{}, 0)
 		return
 	}
 

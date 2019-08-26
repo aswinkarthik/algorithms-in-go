@@ -10,7 +10,7 @@ import (
 
 func TestHeap(t *testing.T) {
 	t.Run("should perform heap operations on a min heap", func(t *testing.T) {
-		h := heap.NewMinHeap()
+		h := heap.NewMinHeapInt64()
 
 		elements := []int64{3, 1, 6, 5, 2, 4}
 		sortedElements := make([]int64, len(elements))
@@ -34,12 +34,12 @@ func TestHeap(t *testing.T) {
 			actual, err := h.Remove()
 
 			assert.NoError(t, err)
-			assert.Equal(t, el, actual)
+			assert.Equal(t, el, actual.(int64))
 		}
 	})
 
 	t.Run("should perform heap operations on a max heap", func(t *testing.T) {
-		h := heap.NewMaxHeap()
+		h := heap.NewMaxHeapInt64()
 
 		elements := []int64{3, 1, 6, 5, 2, 4}
 		sortedElements := make([]int64, len(elements))
@@ -57,14 +57,55 @@ func TestHeap(t *testing.T) {
 
 		actual, err = h.Top()
 		assert.NoError(t, err)
-		assert.Equal(t, sortedElements[0], actual)
+		assert.Equal(t, sortedElements[0], actual.(int64))
 
 		for _, el := range sortedElements {
 			actual, err := h.Remove()
 
 			assert.NoError(t, err)
-			assert.Equal(t, el, actual)
+			assert.Equal(t, el, actual.(int64))
 		}
 	})
 
+	t.Run("should support a custom type to simulate a priority queue", func(t *testing.T) {
+		type myStruct struct {
+			value int
+			label string
+		}
+
+		comparator := func(a, b interface{}) bool {
+			return a.(myStruct).value < b.(myStruct).value
+		}
+
+		first := myStruct{5, "a"}
+		second := myStruct{8, "b"}
+		third := myStruct{3, "c"}
+
+		h := heap.New(comparator)
+
+		h.Insert(first)
+		h.Insert(second)
+		h.Insert(third)
+
+		val, err := h.Top()
+
+		assert.NoError(t, err)
+		assert.Equal(t, third, val.(myStruct))
+
+		val, err = h.Remove()
+
+		assert.NoError(t, err)
+		assert.Equal(t, third, val.(myStruct))
+
+		val, err = h.Remove()
+
+		assert.NoError(t, err)
+		assert.Equal(t, first, val.(myStruct))
+
+		val, err = h.Remove()
+
+		assert.NoError(t, err)
+		assert.Equal(t, second, val.(myStruct))
+
+	})
 }
