@@ -19,13 +19,13 @@ func TestStack(t *testing.T) {
 		actual, err := s.Peek()
 
 		assert.NoError(t, err)
-		assert.Equal(t, 6, actual)
+		assert.Equal(t, 6, actual.(int))
 
 		for i := len(elements) - 1; i >= 0; i-- {
 			el, err := s.Pop()
 
 			assert.NoError(t, err)
-			assert.Equal(t, elements[i], el)
+			assert.Equal(t, elements[i], el.(int))
 		}
 
 		_, err = s.Pop()

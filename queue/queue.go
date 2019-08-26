@@ -3,10 +3,12 @@ package queue
 import "fmt"
 
 // Interface methods exposed by queue
+// All return types and insert types are definted as interface{}
+// Please cast to the type you want
 type Interface interface {
-	Enqueue(int)
-	Dequeue() (int, error)
-	First() (int, error)
+	Enqueue(interface{})
+	Dequeue() (interface{}, error)
+	First() (interface{}, error)
 }
 
 // New to create a new queue
@@ -15,7 +17,7 @@ func New() Interface {
 }
 
 type node struct {
-	value int
+	value interface{}
 	next  *node
 }
 
@@ -24,10 +26,8 @@ type implementation struct {
 	end   *node
 }
 
-var _ Interface = &implementation{}
-
 // Enqueue elements into queue
-func (q *implementation) Enqueue(element int) {
+func (q *implementation) Enqueue(element interface{}) {
 	node := &node{value: element}
 
 	if q.begin != nil && q.end != nil {
@@ -42,7 +42,7 @@ func (q *implementation) Enqueue(element int) {
 }
 
 // Dequeue elements from queue
-func (q *implementation) Dequeue() (int, error) {
+func (q *implementation) Dequeue() (interface{}, error) {
 	if q.begin == nil || q.end == nil {
 		return 0, fmt.Errorf("no elements")
 	}
@@ -52,7 +52,7 @@ func (q *implementation) Dequeue() (int, error) {
 }
 
 // First will return the first element in queue
-func (q *implementation) First() (int, error) {
+func (q *implementation) First() (interface{}, error) {
 	if q.begin != nil {
 		return q.begin.value, nil
 	}

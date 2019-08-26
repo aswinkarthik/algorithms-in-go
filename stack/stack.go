@@ -3,28 +3,33 @@ package stack
 import "fmt"
 
 // Interface provides methods for interaction with stack
+// All return types and insert types are definted as interface{}
+// Please cast to the type you want
 type Interface interface {
-	Push(int)
-	Pop() (int, error)
-	Peek() (int, error)
+	// Push elements into stack
+	Push(interface{})
+	// Pop elements out of stack
+	Pop() (interface{}, error)
+	// Peek what is the top most element
+	Peek() (interface{}, error)
 }
 
 // New creates a new stack
 func New() Interface {
-	return &intStack{}
+	return &implementation{}
 }
 
-type intStack struct {
+type implementation struct {
 	top *node
 }
 
 type node struct {
-	value int
+	value interface{}
 	next  *node
 }
 
 // Push element into stack
-func (s *intStack) Push(element int) {
+func (s *implementation) Push(element interface{}) {
 	node := &node{value: element}
 	if s.top == nil {
 		s.top = node
@@ -36,7 +41,7 @@ func (s *intStack) Push(element int) {
 }
 
 // Pop element out of stack
-func (s *intStack) Pop() (int, error) {
+func (s *implementation) Pop() (interface{}, error) {
 	if s.top == nil {
 		return 0, fmt.Errorf("no elements in stack")
 	}
@@ -46,7 +51,7 @@ func (s *intStack) Pop() (int, error) {
 }
 
 // Peek the top most element in stack
-func (s *intStack) Peek() (int, error) {
+func (s *implementation) Peek() (interface{}, error) {
 	if s.top == nil {
 		return 0, fmt.Errorf("no elements in stack")
 	}

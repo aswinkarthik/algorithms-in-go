@@ -18,12 +18,12 @@ func TestQueue(t *testing.T) {
 		actual, err := q.First()
 
 		assert.NoError(t, err)
-		assert.Equal(t, 5, actual)
+		assert.Equal(t, 5, actual.(int))
 
-		for _, el := range elements {
+		for _, expected := range elements {
 			val, err := q.Dequeue()
 			assert.NoError(t, err)
-			assert.Equal(t, el, val)
+			assert.Equal(t, expected, val.(int))
 		}
 
 		_, err = q.Dequeue()
