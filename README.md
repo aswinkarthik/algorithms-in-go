@@ -10,6 +10,10 @@ This repository is to implement various data structures and alogrithms in Go.
 - [Queue](https://godoc.org/github.com/aswinkarthik/algorithms-in-go/queue)
 - [Heap](https://godoc.org/github.com/aswinkarthik/algorithms-in-go/heap)
 
+## Algorithms
+
+- [Rabin-Karp Substring Search](https://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_algorithm)
+
 ## Usage
 
 ### Stack
@@ -104,6 +108,22 @@ func main() {
 ```
 
 For more docs on [heap](https://godoc.org/github.com/aswinkarthik/algorithms-in-go/heap)
+
+## Strings
+
+Methods offered in strings package
+
+### Submatch
+
+This uses Rabin-Karp Substring match algorithm
+
+```go
+func main() {
+	strings.Submatch("source string", "ce s") // true
+}
+```
+
+For more docs on [strings](https://godoc.org/github.com/aswinkarthik/algorithms-in-go/strings)
 
 ## Test locally
 
