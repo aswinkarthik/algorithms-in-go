@@ -15,6 +15,19 @@ func TestSubmatch(t *testing.T) {
 		assert.True(t, strings.Submatch(source, substr))
 	})
 
+	t.Run("should return true if the given string is at the end of source", func(t *testing.T) {
+		source := "this is the source string"
+		substr := " string"
+
+		assert.True(t, strings.Submatch(source, substr))
+	})
+	t.Run("should return true if the given string is at the beginning of source", func(t *testing.T) {
+		source := "this is the source string"
+		substr := "this is "
+
+		assert.True(t, strings.Submatch(source, substr))
+	})
+
 	t.Run("should return false if the given string is not a substring", func(t *testing.T) {
 		source := "this is the source string"
 		substr := " is the fo"

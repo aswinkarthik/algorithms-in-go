@@ -12,48 +12,53 @@ import (
 // Worst case is O(sb).
 const base = 128
 
+type hashCache map[int]uint64
+
 // Submatch returns true if the substring exists in the source.
 // It uses Rabin-Karp Substring algorithm to do so.
 func Submatch(source, substring string) bool {
-	expectedHash := hash(substring)
 	substrLength := len(substring)
 	if substrLength > len(source) {
 		return false
 	}
 
-	computedHash := hash(source[:substrLength])
-
-	if computedHash == expectedHash {
-		return true
+	// cache is just to avoid repeated computations of base Powers
+	var cache = make(hashCache)
+	for i := 0; i < substrLength; i++ {
+		cache[i] = uint64(math.Pow(base, float64(i)))
 	}
 
-	for i := substrLength; i < len(source); i++ {
-		computedHash = (computedHash-code(source[i-substrLength], substrLength-1))*base + code(source[i], 0)
-		if computedHash == expectedHash {
+	expectedHash := cache.compute(substring)
+	computedHash := cache.compute(source[:substrLength])
+
+	if computedHash == expectedHash {
+		if substring == source[:substrLength] {
 			return true
+		}
+	}
+
+	highestPower := substrLength - 1
+	for i := substrLength; i < len(source); i++ {
+		computedHash = (computedHash-cache.code(source[i-substrLength], highestPower))*base + cache.code(source[i], 0)
+		if computedHash == expectedHash {
+			if substring == source[i-substrLength+1:i+1] {
+				return true
+			}
 		}
 	}
 
 	return false
 }
 
-// powerHashCache is just to avoid repeated computations of base Powers
-var powerHashCache = make(map[int]uint64)
-
-func hash(str string) uint64 {
+func (c hashCache) compute(str string) uint64 {
 	var result uint64
 	for i, j := len(str)-1, 0; i >= 0; i, j = i-1, j+1 {
-		result += code(str[i], j)
+		result += c.code(str[i], j)
 	}
 
 	return result
 }
 
-func code(char byte, position int) uint64 {
-	computed, present := powerHashCache[position]
-	if !present {
-		computed = uint64(math.Pow(base, float64(position)))
-		powerHashCache[position] = computed
-	}
-	return computed * uint64(char)
+func (c hashCache) code(char byte, position int) uint64 {
+	return c[position] * uint64(char)
 }
