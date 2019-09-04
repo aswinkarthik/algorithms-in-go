@@ -113,13 +113,13 @@ For more docs on [heap](https://godoc.org/github.com/aswinkarthik/algorithms-in-
 
 Methods offered in strings package
 
-### Submatch
+### Contains
 
 This uses Rabin-Karp Substring match algorithm
 
 ```go
 func main() {
-	strings.Submatch("source string", "ce s") // true
+	strings.Contains("source string", "ce s") // true
 }
 ```
 

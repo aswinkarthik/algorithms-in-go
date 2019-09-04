@@ -14,9 +14,9 @@ const base = 128
 
 type hashCache map[int]uint64
 
-// Submatch returns true if the substring exists in the source.
+// Contains returns true if the substring exists in the source.
 // It uses Rabin-Karp Substring algorithm to do so.
-func Submatch(source, substring string) bool {
+func Contains(source, substring string) bool {
 	substrLength := len(substring)
 	if substrLength > len(source) {
 		return false
